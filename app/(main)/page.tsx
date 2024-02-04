@@ -11,6 +11,7 @@ import { Column, ColumnFilterApplyTemplateOptions, ColumnFilterClearTemplateOpti
 import { Dropdown } from 'primereact/dropdown';
 import { ProgressBar } from 'primereact/progressbar';
 import { Slider } from 'primereact/slider';
+import { TriStateCheckbox } from 'primereact/tristatecheckbox';
 
 //CustomerService Type
 type ICountryObject ={
@@ -194,6 +195,24 @@ const Dashboard = () => {
         );
     };
 
+    // Verified Field
+
+    const verifiedBodyTemplate = (rowData: Customer) => {
+        let iconClasses = 'pi';
+
+        if (rowData.verified) {
+          iconClasses += ' text-green-500 pi-check-circle';
+        } else {
+          iconClasses += ' text-pink-500 pi-times-circle';
+        }
+
+        return <i className={iconClasses}></i>;
+      };
+
+    const verifiedFilterTemplate = (options: ColumnFilterElementTemplateOptions) => {
+        return <TriStateCheckbox value={options.value} onChange={(e) => options.filterCallback(e.value)} />;
+    };
+
     return (
         <div className="grid">
             {/* For customers Table */}
@@ -220,7 +239,7 @@ const Dashboard = () => {
                         {/* <Column header="Balance" filterField="balance" dataType="numeric" style={{ minWidth: '10rem' }} body={balanceBodyTemplate} filter filterElement={balanceFilterTemplate} /> */}
                         <Column field="status" header="Status" filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusFilterTemplate} />
                         <Column field="activity" header="Activity" showFilterMatchModes={false} style={{ minWidth: '12rem' }} body={activityBodyTemplate} filter filterElement={activityFilterTemplate} />
-                        {/*<Column field="verified" header="Verified" dataType="boolean" bodyClassName="text-center" style={{ minWidth: '8rem' }} body={verifiedBodyTemplate} filter filterElement={verifiedFilterTemplate} /> */}
+                        <Column field="verified" header="Verified" dataType="boolean" bodyClassName="text-center" style={{ minWidth: '8rem' }} body={verifiedBodyTemplate} filter filterElement={verifiedFilterTemplate} />
                     </DataTable>
                 </div>
             </div>
