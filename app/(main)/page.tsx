@@ -3,10 +3,10 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { Button } from 'primereact/button';
-import { Column } from 'primereact/column';
 import { DataTable, DataTableFilterMeta } from 'primereact/datatable';
 import { InputText } from 'primereact/inputtext';
 import { FilterMatchMode, FilterOperator } from 'primereact/api';
+import { Column, ColumnFilterApplyTemplateOptions, ColumnFilterClearTemplateOptions, ColumnFilterElementTemplateOptions } from 'primereact/column';
 
 //CustomerService Type
 type ICountryObject ={
@@ -16,7 +16,7 @@ type ICountryObject ={
 type Customer = {
     id?: number;
     name?: string;
-    country?: ICountryObject;
+    country: ICountryObject;
     company?: string;
     date: Date;
     status?: string;
@@ -127,6 +127,22 @@ const Dashboard = () => {
         setGlobalFilterValue1('');
     };
 
+    // Country Field
+    const countryBodyTemplate = (rowData: Customer) => {
+        return (
+            <React.Fragment>
+                <img alt="flag" src={`/demo/images/flag/flag_placeholder.png`} className={`flag flag-${rowData.country.code}`} width={30} />
+                <span style={{ marginLeft: '.5em', verticalAlign: 'middle' }}>{rowData.country.name}</span>
+            </React.Fragment>
+        );
+    };
+    const filterClearTemplate = (options: ColumnFilterClearTemplateOptions) => {
+        return <Button type="button" icon="pi pi-times" onClick={options.filterClearCallback} severity="secondary"></Button>;
+    };
+    const filterApplyTemplate = (options: ColumnFilterApplyTemplateOptions) => {
+        return <Button type="button" icon="pi pi-check" onClick={options.filterApplyCallback} severity="success"></Button>;
+    };
+
     const header1 = renderHeader1();
     return (
         <div className="grid">
@@ -149,8 +165,8 @@ const Dashboard = () => {
                         header={header1}
                     >
                         <Column field="name" header="Name" filter filterPlaceholder="Search by name" style={{ minWidth: '12rem' }} />
-                        {/* <Column header="Country" filterField="country.name" style={{ minWidth: '12rem' }} body={countryBodyTemplate} filter filterPlaceholder="Search by country" filterClear={filterClearTemplate} filterApply={filterApplyTemplate} />
-                        <Column header="Date" filterField="date" dataType="date" style={{ minWidth: '10rem' }} body={dateBodyTemplate} filter filterElement={dateFilterTemplate} />
+                        <Column header="Country" filterField="country.name" style={{ minWidth: '12rem' }} body={countryBodyTemplate} filter filterPlaceholder="Search by country" filterClear={filterClearTemplate} filterApply={filterApplyTemplate} />
+                        {/*<Column header="Date" filterField="date" dataType="date" style={{ minWidth: '10rem' }} body={dateBodyTemplate} filter filterElement={dateFilterTemplate} />
                         <Column header="Balance" filterField="balance" dataType="numeric" style={{ minWidth: '10rem' }} body={balanceBodyTemplate} filter filterElement={balanceFilterTemplate} />
                         <Column field="status" header="Status" filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusFilterTemplate} />
                         <Column field="activity" header="Activity" showFilterMatchModes={false} style={{ minWidth: '12rem' }} body={activityBodyTemplate} filter filterElement={activityFilterTemplate} />
