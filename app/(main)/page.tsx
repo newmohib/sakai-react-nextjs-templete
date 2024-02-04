@@ -6,6 +6,7 @@ import { Button } from 'primereact/button';
 import { DataTable, DataTableFilterMeta } from 'primereact/datatable';
 import { InputText } from 'primereact/inputtext';
 import { FilterMatchMode, FilterOperator } from 'primereact/api';
+import { Calendar } from 'primereact/calendar';
 import { Column, ColumnFilterApplyTemplateOptions, ColumnFilterClearTemplateOptions, ColumnFilterElementTemplateOptions } from 'primereact/column';
 
 //CustomerService Type
@@ -126,6 +127,7 @@ const Dashboard = () => {
         });
         setGlobalFilterValue1('');
     };
+    const header1 = renderHeader1();
 
     // Country Field
     const countryBodyTemplate = (rowData: Customer) => {
@@ -143,7 +145,22 @@ const Dashboard = () => {
         return <Button type="button" icon="pi pi-check" onClick={options.filterApplyCallback} severity="success"></Button>;
     };
 
-    const header1 = renderHeader1();
+    //Date Filter
+    const formatDate = (value: Date) => {
+        return value.toLocaleDateString('en-US', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
+    };
+    const dateBodyTemplate = (rowData: Customer) => {
+        return formatDate(rowData.date);
+    };
+
+    const dateFilterTemplate = (options: ColumnFilterElementTemplateOptions) => {
+        return <Calendar value={options.value} onChange={(e) => options.filterCallback(e.value, options.index)} dateFormat="mm/dd/yy" placeholder="mm/dd/yyyy" mask="99/99/9999" />;
+    };
+
     return (
         <div className="grid">
             {/* For customers Table */}
@@ -166,8 +183,8 @@ const Dashboard = () => {
                     >
                         <Column field="name" header="Name" filter filterPlaceholder="Search by name" style={{ minWidth: '12rem' }} />
                         <Column header="Country" filterField="country.name" style={{ minWidth: '12rem' }} body={countryBodyTemplate} filter filterPlaceholder="Search by country" filterClear={filterClearTemplate} filterApply={filterApplyTemplate} />
-                        {/*<Column header="Date" filterField="date" dataType="date" style={{ minWidth: '10rem' }} body={dateBodyTemplate} filter filterElement={dateFilterTemplate} />
-                        <Column header="Balance" filterField="balance" dataType="numeric" style={{ minWidth: '10rem' }} body={balanceBodyTemplate} filter filterElement={balanceFilterTemplate} />
+                        <Column header="Date" filterField="date" dataType="date" style={{ minWidth: '10rem' }} body={dateBodyTemplate} filter filterElement={dateFilterTemplate} />
+                        {/*<Column header="Balance" filterField="balance" dataType="numeric" style={{ minWidth: '10rem' }} body={balanceBodyTemplate} filter filterElement={balanceFilterTemplate} />
                         <Column field="status" header="Status" filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusFilterTemplate} />
                         <Column field="activity" header="Activity" showFilterMatchModes={false} style={{ minWidth: '12rem' }} body={activityBodyTemplate} filter filterElement={activityFilterTemplate} />
                         <Column field="verified" header="Verified" dataType="boolean" bodyClassName="text-center" style={{ minWidth: '8rem' }} body={verifiedBodyTemplate} filter filterElement={verifiedFilterTemplate} /> */}
