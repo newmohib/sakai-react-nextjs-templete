@@ -9,7 +9,8 @@ import { FilterMatchMode, FilterOperator } from 'primereact/api';
 import { Calendar } from 'primereact/calendar';
 import { Column, ColumnFilterApplyTemplateOptions, ColumnFilterClearTemplateOptions, ColumnFilterElementTemplateOptions } from 'primereact/column';
 import { Dropdown } from 'primereact/dropdown';
-
+import { ProgressBar } from 'primereact/progressbar';
+import { Slider } from 'primereact/slider';
 
 //CustomerService Type
 type ICountryObject ={
@@ -176,6 +177,23 @@ const Dashboard = () => {
         return <Dropdown value={options.value} options={statuses} onChange={(e) => options.filterCallback(e.value, options.index)} itemTemplate={statusItemTemplate} placeholder="Select a Status" className="p-column-filter" showClear />;
     };
 
+    // Activity Field
+    const activityBodyTemplate = (rowData: Customer) => {
+        return <ProgressBar value={rowData.activity} showValue={false} style={{ height: '.5rem' }}></ProgressBar>;
+    };
+
+    const activityFilterTemplate = (options: ColumnFilterElementTemplateOptions) => {
+        return (
+            <React.Fragment>
+                <Slider value={options.value} onChange={(e) => options.filterCallback(e.value)} range className="m-3"></Slider>
+                <div className="flex align-items-center justify-content-between px-2">
+                    <span>{options.value ? options.value[0] : 0}</span>
+                    <span>{options.value ? options.value[1] : 100}</span>
+                </div>
+            </React.Fragment>
+        );
+    };
+
     return (
         <div className="grid">
             {/* For customers Table */}
@@ -201,8 +219,8 @@ const Dashboard = () => {
                         <Column header="Date" filterField="date" dataType="date" style={{ minWidth: '10rem' }} body={dateBodyTemplate} filter filterElement={dateFilterTemplate} />
                         {/* <Column header="Balance" filterField="balance" dataType="numeric" style={{ minWidth: '10rem' }} body={balanceBodyTemplate} filter filterElement={balanceFilterTemplate} /> */}
                         <Column field="status" header="Status" filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusFilterTemplate} />
-                        {/*<Column field="activity" header="Activity" showFilterMatchModes={false} style={{ minWidth: '12rem' }} body={activityBodyTemplate} filter filterElement={activityFilterTemplate} />
-                        <Column field="verified" header="Verified" dataType="boolean" bodyClassName="text-center" style={{ minWidth: '8rem' }} body={verifiedBodyTemplate} filter filterElement={verifiedFilterTemplate} /> */}
+                        <Column field="activity" header="Activity" showFilterMatchModes={false} style={{ minWidth: '12rem' }} body={activityBodyTemplate} filter filterElement={activityFilterTemplate} />
+                        {/*<Column field="verified" header="Verified" dataType="boolean" bodyClassName="text-center" style={{ minWidth: '8rem' }} body={verifiedBodyTemplate} filter filterElement={verifiedFilterTemplate} /> */}
                     </DataTable>
                 </div>
             </div>
